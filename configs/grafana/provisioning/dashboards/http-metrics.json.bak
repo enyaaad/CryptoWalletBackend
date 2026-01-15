@@ -1,0 +1,348 @@
+{
+  "dashboard": {
+    "uid": "http-metrics",
+    "title": "HTTP Metrics Dashboard",
+    "tags": ["http", "api", "metrics"],
+    "timezone": "browser",
+    "schemaVersion": 27,
+    "version": 1,
+    "refresh": "30s",
+    "editable": true,
+    "gnetId": null,
+    "panels": [
+      {
+        "id": 1,
+        "title": "HTTP Requests Rate (RPS)",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m])) by (method, endpoint, status)",
+            "legendFormat": "{{method}} {{endpoint}} {{status}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Requests/sec"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true, "values": true, "current": true}
+      },
+      {
+        "id": 2,
+        "title": "HTTP Requests by Status Code",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m])) by (status)",
+            "legendFormat": "Status {{status}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Requests/sec"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true}
+      },
+      {
+        "id": 3,
+        "title": "HTTP Requests by Endpoint",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m])) by (endpoint)",
+            "legendFormat": "{{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Requests/sec"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true}
+      },
+      {
+        "id": 4,
+        "title": "Error Rate (4xx + 5xx)",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"4..|5..\"}[5m]))",
+            "legendFormat": "Errors",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(http_requests_total[5m]))",
+            "legendFormat": "Total",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Requests/sec"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true}
+      },
+      {
+        "id": 5,
+        "title": "Average Request Duration",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_duration_secs_sum[5m])) by (method, endpoint) / sum(rate(http_requests_duration_secs_count[5m])) by (method, endpoint)",
+            "legendFormat": "{{method}} {{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Duration (seconds)"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true}
+      },
+      {
+        "id": 6,
+        "title": "Request Duration - 95th Percentile",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_requests_duration_secs_bucket[5m])) by (le, method, endpoint))",
+            "legendFormat": "p95 {{method}} {{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Duration (seconds)"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true}
+      },
+      {
+        "id": 7,
+        "title": "Request Duration - 99th Percentile",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(http_requests_duration_secs_bucket[5m])) by (le, method, endpoint))",
+            "legendFormat": "p99 {{method}} {{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Duration (seconds)"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true}
+      },
+      {
+        "id": 8,
+        "title": "Request Duration Percentiles",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(http_requests_duration_secs_bucket[5m])) by (le, endpoint))",
+            "legendFormat": "p50 {{endpoint}}",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_requests_duration_secs_bucket[5m])) by (le, endpoint))",
+            "legendFormat": "p95 {{endpoint}}",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(http_requests_duration_secs_bucket[5m])) by (le, endpoint))",
+            "legendFormat": "p99 {{endpoint}}",
+            "refId": "C"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Duration (seconds)"},
+          {"format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "legend": {"show": true}
+      },
+      {
+        "id": 9,
+        "title": "Total Requests",
+        "type": "stat",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 32},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m]))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"],
+            "fields": ""
+          },
+          "textMode": "auto"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 100, "color": "yellow"},
+                {"value": 500, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Error Rate %",
+        "type": "stat",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 32},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"4..|5..\"}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"],
+            "fields": ""
+          },
+          "textMode": "auto"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 1, "color": "yellow"},
+                {"value": 5, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Avg Duration",
+        "type": "stat",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 32},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_duration_secs_sum[5m])) / sum(rate(http_requests_duration_secs_count[5m]))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"],
+            "fields": ""
+          },
+          "textMode": "auto"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 0.5, "color": "yellow"},
+                {"value": 1, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "P95 Duration",
+        "type": "stat",
+        "datasource": "Prometheus",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 32},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_requests_duration_secs_bucket[5m])) by (le))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"],
+            "fields": ""
+          },
+          "textMode": "auto"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 0.5, "color": "yellow"},
+                {"value": 1, "color": "red"}
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {}
+  },
+  "overwrite": true
+}
