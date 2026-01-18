@@ -1,4 +1,5 @@
 docs/
+.cursor/
 
 .env
 .env.example
