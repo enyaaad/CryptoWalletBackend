@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/enyaaad/CryptoWalletBackend/internal/api-gateway/domain/auth/entity"
+	"github.com/enyaaad/CryptoWalletBackend/internal/auth/domain/entity"
 )
 
 type AuthService interface {

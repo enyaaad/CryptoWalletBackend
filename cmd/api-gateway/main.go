@@ -1,43 +1,26 @@
 package main
 
 import (
-	"github.com/enyaaad/CryptoWalletBackend/internal/api-gateway/middleware"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/enyaaad/CryptoWalletBackend/pkg/logger"
-	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
 	logger := logger.InitLogger("api-gateway")
-	logger.Info().Msg("Starting APIGATEWAY")
+	logger.Info().Msg("Starting API Gateway")
 
-	r := gin.Default()
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
 
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "all good!"})
-	})
+}
 
-	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
-
-	r.Use(middleware.MetricsMiddleware())
-	r.Use(middleware.LoggerNiddleware(logger))
-
-	v1 := r.Group("/api/v1")
-	{
-		auth := v1.Group("/auth")
-		{
-			auth.POST("/register")
-			auth.POST("/login")
-		}
-
-		protected := v1.Group("")
-		{
-			wallets := protected.Group("/wallets")
-			{
-				wallets.POST("/get")
-			}
-		}
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
 	}
-
-	r.Run(":8080")
+	return defaultValue
 }

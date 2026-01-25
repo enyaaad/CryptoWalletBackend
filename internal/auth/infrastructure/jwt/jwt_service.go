@@ -1,11 +1,11 @@
-package jwt_service
+package jwt
 
 import (
 	"strconv"
 	"time"
 
-	"github.com/enyaaad/CryptoWalletBackend/internal/api-gateway/domain/auth"
-	"github.com/enyaaad/CryptoWalletBackend/internal/api-gateway/domain/auth/entity"
+	authDomain "github.com/enyaaad/CryptoWalletBackend/internal/auth/domain"
+	"github.com/enyaaad/CryptoWalletBackend/internal/auth/domain/entity"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
@@ -15,6 +15,7 @@ type JwtService interface {
 	GenereteRefreshToken(user *entity.User) (string, error)
 	ValidateToken(tokenString string) (*entity.JWTClaims, error)
 }
+
 type jwt_service struct {
 	secretKey     []byte
 	accessExpiry  time.Duration
@@ -76,28 +77,28 @@ func (jwts *jwt_service) ValidateToken(tokenString string) (*entity.JWTClaims, e
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, auth.ErrInvalidToken
+			return nil, authDomain.ErrInvalidToken
 		}
 		return jwts.secretKey, nil
 	})
 
 	if err != nil {
 		if err == jwt.ErrTokenExpired {
-			return nil, auth.ErrTokenExpired
+			return nil, authDomain.ErrTokenExpired
 		}
 
 		if err == jwt.ErrSignatureInvalid {
-			return nil, auth.ErrInvalidToken
+			return nil, authDomain.ErrInvalidToken
 		}
-		return nil, auth.ErrInvalidToken
+		return nil, authDomain.ErrInvalidToken
 	}
 
 	if !token.Valid {
-		return nil, auth.ErrInvalidToken
+		return nil, authDomain.ErrInvalidToken
 	}
 
 	if claims.Issuer != "cryptowallet-api" {
-		return nil, auth.ErrInvalidToken
+		return nil, authDomain.ErrInvalidToken
 	}
 
 	return claims, nil
