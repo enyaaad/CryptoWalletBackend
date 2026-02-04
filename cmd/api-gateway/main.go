@@ -71,14 +71,14 @@ func setupRouter(log zerolog.Logger, authHandler *httpHandlers.AuthHandler) *gin
 	router := gin.New()
 	gin.SetMode(mode)
 
-	router.Use(middleware.LoggerNiddleware(log))
+	router.Use(middleware.LoggerMiddleware(log))
 	router.Use(middleware.MetricsMiddleware())
 
 	router.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"status": "ok"})
 	})
 
-	router.GET("metrics", gin.WrapH(promhttp.Handler()))
+	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	api := router.Group("/api/v1")
 	{

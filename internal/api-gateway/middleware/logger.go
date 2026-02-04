@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func LoggerNiddleware(logger zerolog.Logger) gin.HandlerFunc {
+func LoggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 		path := c.Request.URL.Path
@@ -31,6 +31,7 @@ func LoggerNiddleware(logger zerolog.Logger) gin.HandlerFunc {
 			Str("path", path).
 			Int("status", status).
 			Dur("duration", duration).
-			Str("ip", c.ClientIP())
+			Str("ip", c.ClientIP()).
+			Msg("HTTP request")
 	}
 }

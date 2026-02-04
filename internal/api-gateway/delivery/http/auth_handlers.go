@@ -18,7 +18,7 @@ func NewAuthHandler(authClient *authClient.AuthClient) *AuthHandler {
 func (h *AuthHandler) Register(ctx *gin.Context) {
 	var req RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		code, response := gRPCtoHTTPErr(err)
+		code, response := validationErr()
 		ctx.JSON(code, response)
 		return
 	}
@@ -52,7 +52,7 @@ func (h *AuthHandler) Register(ctx *gin.Context) {
 func (h *AuthHandler) Login(ctx *gin.Context) {
 	var req LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		code, response := gRPCtoHTTPErr(err)
+		code, response := validationErr()
 		ctx.JSON(code, response)
 		return
 	}
@@ -85,7 +85,7 @@ func (h *AuthHandler) Login(ctx *gin.Context) {
 func (h *AuthHandler) RefreshToken(ctx *gin.Context) {
 	var req RefreshTokenRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		code, response := gRPCtoHTTPErr(err)
+		code, response := validationErr()
 		ctx.JSON(code, response)
 		return
 	}
@@ -117,7 +117,7 @@ func (h *AuthHandler) RefreshToken(ctx *gin.Context) {
 func (h *AuthHandler) ValidateToken(ctx *gin.Context) {
 	var req ValidateTokenRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		code, response := gRPCtoHTTPErr(err)
+		code, response := validationErr()
 		ctx.JSON(code, response)
 		return
 	}

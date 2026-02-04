@@ -14,6 +14,15 @@ type ErrorDetail struct {
 	Message string `json:"message"`
 }
 
+func validationErr() (int, *ErrorResponse) {
+	return 400, &ErrorResponse{
+		Error: ErrorDetail{
+			Code:    "INVALID_ARGUMENT",
+			Message: "invalid request format",
+		},
+	}
+}
+
 func gRPCtoHTTPErr(err error) (int, *ErrorResponse) {
 	status, ok := status.FromError(err)
 	if !ok {

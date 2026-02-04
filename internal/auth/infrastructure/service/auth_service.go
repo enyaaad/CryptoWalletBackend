@@ -58,7 +58,7 @@ func (s *authService) Register(ctx context.Context, req *entity.RegisterRequest)
 		return nil, err
 	}
 
-	refreshToken, err := s.jwtService.GenereteRefreshToken(user)
+	refreshToken, err := s.jwtService.GenerateRefreshToken(user)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func (s *authService) Login(ctx context.Context, req *entity.LoginRequest) (*ent
 		return nil, err
 	}
 
-	refreshToken, err := s.jwtService.GenereteRefreshToken(user)
+	refreshToken, err := s.jwtService.GenerateRefreshToken(user)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func (authS *authService) RefreshToken(ctx context.Context, refreshToken string)
 		return nil, err
 	}
 
-	newRefreshToken, err := authS.jwtService.GenereteRefreshToken(user)
+	newRefreshToken, err := authS.jwtService.GenerateRefreshToken(user)
 	if err != nil {
 		return nil, err
 	}

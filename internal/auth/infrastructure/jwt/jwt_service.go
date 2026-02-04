@@ -12,7 +12,7 @@ import (
 
 type JwtService interface {
 	GenerateAccessToken(user *entity.User) (string, error)
-	GenereteRefreshToken(user *entity.User) (string, error)
+	GenerateRefreshToken(user *entity.User) (string, error)
 	ValidateToken(tokenString string) (*entity.JWTClaims, error)
 }
 
@@ -51,7 +51,7 @@ func (jwts *jwt_service) GenerateAccessToken(user *entity.User) (string, error) 
 	return token.SignedString(jwts.secretKey)
 }
 
-func (jwts *jwt_service) GenereteRefreshToken(user *entity.User) (string, error) {
+func (jwts *jwt_service) GenerateRefreshToken(user *entity.User) (string, error) {
 	now := time.Now()
 
 	claims := entity.JWTClaims{
