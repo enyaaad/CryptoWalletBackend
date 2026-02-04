@@ -1,101 +1,103 @@
 # CryptoWallet Backend
 
-Криптовалютный кошелек с функционалом управления аккаунтами, кошельками и транзакциями.
+Cryptocurrency wallet with account, wallet, and transaction management functionality.
 
-## Что делает программа
+📋 [Changelog](./CHANGELOG.md) - Project change history
+
+## What it does
 
 MVP Plan:
 
-- Регистрация и аутентификация пользователей с JWT токенами
-- Создание и управление криптовалютными кошельками
-- Отправка и получение криптовалют
-- История транзакций
-- P2P обмен между пользователями
-- Интеграция с блокчейнами (Bitcoin, Ethereum, Solana)
-- Мониторинг и метрики в реальном времени
+- User registration and authentication with JWT tokens
+- Creation and management of cryptocurrency wallets
+- Sending and receiving cryptocurrencies
+- Transaction history
+- P2P exchange between users
+- Blockchain integration (Bitcoin, Ethereum, Solana)
+- Real-time monitoring and metrics
 
-## Архитектура
+## Architecture
 
-Проект строится на микросервисной архитектуре с использованием Clean Architecture:
+The project is built on a microservices architecture using Clean Architecture:
 
 ```
 cmd/
-├── api-gateway/          # HTTP REST API для фронтенда (Gin)
-├── auth-service/         # Аутентификация и авторизация (gRPC)
-├── wallet-service/       # Управление кошельками (gRPC)
-├── transaction-service/  # Обработка транзакций (gRPC)
-├── p2p-service/         # P2P обмен (gRPC)
-└── exchange-service/    # Криптовалютный обмен (gRPC)
+├── api-gateway/          # HTTP REST API for frontend (Gin)
+├── auth-service/         # Authentication and authorization (gRPC)
+├── wallet-service/       # Wallet management (gRPC)
+├── transaction-service/  # Transaction processing (gRPC)
+├── p2p-service/         # P2P exchange (gRPC)
+└── exchange-service/    # Cryptocurrency exchange (gRPC)
 
 internal/
 ├── api-gateway/
-│   ├── delivery/http/   # HTTP handlers (Gin) для фронтенда
-│   ├── infrastructure/grpc/  # gRPC клиенты для вызова микросервисов
-│   └── middleware/      # Логирование, метрики
-├── auth/                 # Auth микросервис
-│   ├── domain/          # Бизнес-логика (сущности, интерфейсы)
-│   ├── infrastructure/  # Внешние системы (PostgreSQL, JWT, Password)
-│   └── delivery/grpc/   # gRPC сервер
-├── wallet/              # Wallet микросервис
+│   ├── delivery/http/   # HTTP handlers (Gin) for frontend
+│   ├── infrastructure/grpc/  # gRPC clients for calling microservices
+│   └── middleware/      # Logging, metrics
+├── auth/                 # Auth microservice
+│   ├── domain/          # Business logic (entities, interfaces)
+│   ├── infrastructure/  # External systems (PostgreSQL, JWT, Password)
+│   └── delivery/grpc/   # gRPC server
+├── wallet/              # Wallet microservice
 └── ...
 
 api/
-└── proto/               # Proto файлы для gRPC
+└── proto/               # Proto files for gRPC
     └── auth.proto
 
-pkg/                     # Общие компоненты
-├── logger/              # Структурированное логирование
-└── metrics/             # Метрики Prometheus
+pkg/                     # Shared components
+├── logger/              # Structured logging
+└── metrics/             # Prometheus metrics
 ```
 
-### Коммуникация между сервисами
+### Service Communication
 
-- **Фронтенд ↔ API Gateway**: HTTP REST API (Gin)
-- **API Gateway ↔ Микросервисы**: gRPC
-- **Микросервисы ↔ Микросервисы**: gRPC
+- **Frontend ↔ API Gateway**: HTTP REST API (Gin)
+- **API Gateway ↔ Microservices**: gRPC
+- **Microservices ↔ Microservices**: gRPC
 
-## Технологии
+## Technologies
 
-### Основной стек
-- **Go 1.23** - основной язык программирования
-- **Gin** - HTTP фреймворк для REST API (API Gateway)
-- **gRPC** - межсервисная коммуникация между микросервисами
-- **Protocol Buffers** - определение контрактов для gRPC
-- **PostgreSQL** - основная база данных
-- **Redis** - кэширование и сессии
-- **Apache Kafka** - event-driven коммуникация между сервисами
+### Core Stack
+- **Go 1.23** - primary programming language
+- **Gin** - HTTP framework for REST API (API Gateway)
+- **gRPC** - inter-service communication between microservices
+- **Protocol Buffers** - contract definition for gRPC
+- **PostgreSQL** - primary database
+- **Redis** - caching and sessions
+- **Apache Kafka** - event-driven communication between services
 
-### Мониторинг и наблюдаемость
-- **Prometheus** - сбор метрик
-- **Grafana** - визуализация метрик и дашборды
-- **Zerolog** - структурированное логирование
+### Monitoring and Observability
+- **Prometheus** - metrics collection
+- **Grafana** - metrics visualization and dashboards
+- **Zerolog** - structured logging
 
-### Инфраструктура
-- **Docker Compose** - локальная разработка
-- **golang-migrate** - миграции базы данных
-- **JWT** - аутентификация и авторизация
+### Infrastructure
+- **Docker Compose** - local development
+- **golang-migrate** - database migrations
+- **JWT** - authentication and authorization
 
-## Запуск
+## Getting Started
 
-1. Установите зависимости:
+1. Install dependencies:
 ```bash
 go mod download
 ```
 
-2. Запустите инфраструктуру (PostgreSQL, Redis, Prometheus, Grafana):
+2. Start infrastructure (PostgreSQL, Redis, Prometheus, Grafana):
 ```bash
 make up
 ```
 
-3. Примените миграции:
+3. Apply migrations:
 
 ###TODO
 
-4. Запустите Auth Service (gRPC сервер на порту 50051):
+4. Start Auth Service (gRPC server on port 50051):
 
 ###TODO
 
-5. Запустите API Gateway (HTTP REST API на порту 8080):
+5. Start API Gateway (HTTP REST API on port 8080):
 ```bash
 go run cmd/api-gateway/main.go
 ```
@@ -104,42 +106,42 @@ go run cmd/api-gateway/main.go
 
 ### TODO
 
-## Разработка
+## Development
 
-### Структура проекта
-Проект следует принципам Clean Architecture:
-- **Domain слой** содержит бизнес-логику и интерфейсы (не зависит от внешних систем)
-- **Infrastructure слой** реализует внешние зависимости (БД, gRPC клиенты/серверы)
-- **Delivery слой** обрабатывает запросы (HTTP handlers для API Gateway, gRPC handlers для микросервисов)
+### Project Structure
+The project follows Clean Architecture principles:
+- **Domain layer** contains business logic and interfaces (does not depend on external systems)
+- **Infrastructure layer** implements external dependencies (DB, gRPC clients/servers)
+- **Delivery layer** handles requests (HTTP handlers for API Gateway, gRPC handlers for microservices)
 
-### Микросервисы
+### Microservices
 
-Каждый микросервис:
-- Имеет свою точку входа в `cmd/<service-name>/main.go`
-- Содержит полную реализацию в `internal/<service-name>/`
-- Предоставляет gRPC API для других сервисов
-- Имеет свою базу данных (или схему в общей БД)
+Each microservice:
+- Has its own entry point in `cmd/<service-name>/main.go`
+- Contains full implementation in `internal/<service-name>/`
+- Provides gRPC API for other services
+- Has its own database (or schema in shared DB)
 
-### Тестирование
+### Testing
 
 ### TODO
 
-### Миграции
+### Migrations
 ```bash
-# Создание новой миграции
+# Create a new migration
 migrate create -ext sql -dir migrations -seq add_users_table
 
-# Применение миграций
+# Apply migrations
 migrate -path migrations -database "postgres://cryptowallet:cryptowallet123@localhost:5432/cryptowallet?sslmode=disable" up
 ```
 
-### Генерация gRPC кода
+### gRPC Code Generation
 ```bash
-# После изменения proto файлов
+# After modifying proto files
 protoc --go_out=. --go-grpc_out=. api/proto/*.proto
 ```
 
-## Порты сервисов
+## Service Ports
 
 - **API Gateway**: 8080 (HTTP REST API)
 - **Auth Service**: 50051 (gRPC)
@@ -150,11 +152,11 @@ protoc --go_out=. --go-grpc_out=. api/proto/*.proto
 - **Prometheus**: 9090
 - **Grafana**: 3000
 
-## Цели проекта
+## Project Goals
 
-- Изучение современных подходов к backend разработке
-- Практика работы с микросервисной архитектурой
-- Освоение gRPC для межсервисной коммуникации
-- Освоение event-driven подходов
-- Реализация мониторинга
-- Применение BestPractice Go разработки
+- Learning modern backend development approaches
+- Practicing microservices architecture
+- Mastering gRPC for inter-service communication
+- Mastering event-driven approaches
+- Implementing monitoring
+- Applying Go development best practices
