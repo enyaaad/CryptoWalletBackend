@@ -1,7 +1,7 @@
+FROM golang:1.24-alpine AS builder
+
 ARG SERVICE_NAME
 ARG SERVICE_PORT
-
-FROM golang:1.24-alpine AS builder
 
 RUN apk add --no-cache git ca-certificates
 
@@ -20,6 +20,9 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
 
 FROM alpine:latest
 
+ARG SERVICE_NAME
+ARG SERVICE_PORT
+
 RUN apk --no-cache add ca-certificates wget busybox-extras
 
 WORKDIR /app
@@ -32,6 +35,4 @@ RUN addgroup -g 1000 appuser && \
 
 USER appuser
 
-EXPOSE ${SERVICE_PORT}
-
-CMD ["./${SERVICE_NAME}"]
+CMD sh -c "./${SERVICE_NAME}"
